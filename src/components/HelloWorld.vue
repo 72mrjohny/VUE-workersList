@@ -1,45 +1,120 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div>
+    <h1>WorkersList</h1>
+    <table>
+      <thead>
+        <th>IMIĘ</th>
+        <th>NAZWISKO</th>
+        <th>DZIAŁ</th>
+        <th>WYNAGRODZENIE(kwota)</th>
+        <th>WYNAGRODZENIE(waluta)</th>
+      </thead>
+      <tbody>
+        <tr v-for="worker in workers" v-bind:key="worker.name">
+          <td>{{worker.imie}}</td>
+          <td>{{worker.nazwisko}}</td>
+          <td>{{worker.dzial}}</td>
+          <td>{{worker.wynagrodzenieKwota}}</td>
+          <td>{{worker.wynagrodzenieWaluta}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <hr />
+    <input type="text" placeholder="Imię" v-model="formData.imie" />
+    <input type="text" placeholder="Nazwisko" v-model="formData.nazwisko" />
+    <input type="text" placeholder="Dział" v-model="formData.dzial" />
+    <input type="number" placeholder="Wynagrodzenie" v-model="formData.wynagrodzenieKwota" />
+    <select name="Waluta" v-model="formData.wynagrodzenieWaluta">
+      <option value="PLN">PLN</option>
+      <option value="EUR">EUR</option>
+    </select>
+    <input type="submit" value="Dodaj pracownika" v-on:click="addWorker" />
+    <hr />
+    imie:{{formData.imie}}
+    <br />
+    nazwisko:{{formData.nazwisko}}
+    <br />
+    dzial:{{formData.dzial}}
+    <br />
+    Wynagrodzenie(kwota):{{formData.wynagrodzenieKwota}}
+    <br />
+    Wynagrodzenie(waluta):{{formData.wynagrodzenieWaluta}}
+    <br />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
+  name: "HelloWorld",
+  data() {
+    return {
+      formData: {
+        imie: null,
+        nazwisko: null,
+        dzial: null,
+        wynagrodzenieKwota: null,
+        wynagrodzenieWaluta: null
+      },
+      workers: [
+        {
+          imie: "Jan",
+          nazwisko: "Kowalski",
+          dzial: "IT",
+          wynagrodzenieKwota: "3000",
+          wynagrodzenieWaluta: "PLN"
+        },
+        {
+          imie: "Anna",
+          nazwisko: "Bąk",
+          dzial: "Administracja",
+          wynagrodzenieKwota: "2400.50",
+          wynagrodzenieWaluta: "PLN"
+        },
+        {
+          imie: "Paweł",
+          nazwisko: "Zabłocki",
+          dzial: "IT",
+          wynagrodzenieKwota: "3300",
+          wynagrodzenieWaluta: "PLN"
+        },
+        {
+          imie: "Tomasz",
+          nazwisko: "Osiecki",
+          dzial: "Administracja",
+          wynagrodzenieKwota: "2100",
+          wynagrodzenieWaluta: "PLN"
+        },
+        {
+          imie: "Iwona",
+          nazwisko: "Leihs-Gutowska",
+          dzial: "Handlowiec",
+          wynagrodzenieKwota: "3100",
+          wynagrodzenieWaluta: "PLN"
+        }
+      ]
+    };
+  },
+  methods: {
+    addWorker() {
+      const newWorker = {
+        imie: this.formData.imie,
+        nazwisko: this.formData.nazwisko,
+        dzial: this.formData.dzial,
+        wynagrodzenieKwota: this.formData.wynagrodzenieKwota,
+        wynagrodzenieWaluta: this.formData.wynagrodzenieWaluta
+      };
+      this.workers.push(newWorker);
+      this.formData.imie = "";
+      this.formData.nazwisko = "";
+      this.formData.dzial = "";
+      this.formData.wynagrodzenieKwota = "";
+      this.formData.wynagrodzenieWaluta = "";
+    }
   }
-}
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style scoped>
 h3 {
   margin: 40px 0 0;
