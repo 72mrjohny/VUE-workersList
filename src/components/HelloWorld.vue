@@ -1,65 +1,59 @@
 <template>
   <div>
     <h1>Lista pracowników</h1>
-    <input type="text" v-model="filters.search" placeholder="Podaj imię / nazwisko pracownika" />
-    <select name="Dzial" v-model="filters.department">
-      <option value>Wszystkie</option>
-      <option
-        v-for="department in allowedDepartments"
-        :key="'department-'+department"
-        :value="department"
-      >{{department}}</option>
-    </select>
-    <input type="number" v-model="filters.salaryFrom" placeholder="Płaca (od)" />
-    <input type="number" v-model="filters.salaryTo" placeholder="Płaca (do)" />
-    <br />
-    <hr />
-    <table>
-      <thead>
-        <th>IMIĘ</th>
-        <th>NAZWISKO</th>
-        <th>DZIAŁ</th>
-        <th>WYNAGRODZENIE(kwota)</th>
-        <th>WYNAGRODZENIE(waluta)</th>
-      </thead>
-      <tbody>
-        <tr
-          v-for="(worker,index) in workers"
-          v-bind:key="worker.name"
-          v-show="filteredWorkersIds.indexOf(index) > -1"
-        >
-          <td>{{worker.imie}}</td>
-          <td>{{worker.nazwisko}}</td>
-          <td>{{worker.dzial}}</td>
-          <td>{{worker.wynagrodzenieKwota}}</td>
-          <td>{{worker.wynagrodzenieWaluta}}</td>
-        </tr>
-      </tbody>
-    </table>
-    <hr />
-    <p>Wynagrodzenie(suma):{{this.totalSum}}</p>
-    <br />
-    <hr />
-    <input type="text" placeholder="Imię" v-model="formData.imie" />
-    <input type="text" placeholder="Nazwisko" v-model="formData.nazwisko" />
-    <input type="text" placeholder="Dział" v-model="formData.dzial" />
-    <input type="number" placeholder="Wynagrodzenie" v-model="formData.wynagrodzenieKwota" />
-    <select name="Waluta" v-model="formData.wynagrodzenieWaluta">
-      <option value="PLN">PLN</option>
-      <option value="EUR">EUR</option>
-    </select>
-    <input type="submit" value="Dodaj pracownika" v-on:click="addWorker" />
-    <hr />
-    <p>imie:{{formData.imie}}</p>
+    <div class="search-wrapper">
+      <input type="text" v-model="filters.search" placeholder="Podaj imię / nazwisko" />
+      <select name="Dzial" v-model="filters.department">
+        <option value>Wszystkie działy</option>
+        <option
+          v-for="department in allowedDepartments"
+          :key="'department-'+department"
+          :value="department"
+        >{{department}}</option>
+      </select>
+      <input type="number" v-model="filters.salaryFrom" placeholder="Płaca (od)" />
+      <input type="number" v-model="filters.salaryTo" placeholder="Płaca (do)" />
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <th>IMIĘ</th>
+          <th>NAZWISKO</th>
+          <th>DZIAŁ</th>
+          <th>WYNAGRODZENIE(kwota)</th>
+          <th>WYNAGRODZENIE(waluta)</th>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(worker,index) in workers"
+            v-bind:key="worker.name"
+            v-show="filteredWorkersIds.indexOf(index) > -1"
+          >
+            <td>{{worker.imie}}</td>
+            <td>{{worker.nazwisko}}</td>
+            <td>{{worker.dzial}}</td>
+            <td>{{worker.wynagrodzenieKwota}}</td>
+            <td>{{worker.wynagrodzenieWaluta}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="sum">
+        <p>Wynagrodzenie(suma):{{this.totalSum}}</p>
+      </div>
+    </div>
 
-    <p>nazwisko:{{formData.nazwisko}}</p>
-
-    <p>dzial:{{formData.dzial}}</p>
-
-    <p>Wynagrodzenie(kwota):{{formData.wynagrodzenieKwota}}</p>
-
-    <p>Wynagrodzenie(waluta):{{formData.wynagrodzenieWaluta}}</p>
-    <br />
+    <div class="add-wrapper">
+      <input type="text" placeholder="Imię" v-model="formData.imie" />
+      <input type="text" placeholder="Nazwisko" v-model="formData.nazwisko" />
+      <input type="text" placeholder="Dział" v-model="formData.dzial" />
+      <input type="number" placeholder="Wynagrodzenie" v-model="formData.wynagrodzenieKwota" />
+      <select name="Waluta" v-model="formData.wynagrodzenieWaluta">
+        <option value="PLN">PLN</option>
+        <option value="EUR">EUR</option>
+        <option value="USD">USD</option>
+      </select>
+      <input type="submit" value="Dodaj pracownika" class="btn" v-on:click="addWorker " />
+    </div>
   </div>
 </template>
 
@@ -76,10 +70,7 @@ export default {
     return {
       //filteredWorkersIds: [1, 3],
       allowedDepartments: [],
-      search: "",
-      searchDepartment: "",
-      valueA: "",
-      valueB: "",
+
       filters: {
         search: "",
         department: "",
@@ -113,12 +104,18 @@ export default {
         wynagrodzenieKwota: this.formData.wynagrodzenieKwota,
         wynagrodzenieWaluta: this.formData.wynagrodzenieWaluta
       };
-      if (this.formData.imie && this.formData.nazwisko) {
+      if (
+        this.formData.imie &&
+        this.formData.nazwisko &&
+        this.formData.dzial &&
+        this.formData.wynagrodzenieKwota &&
+        this.formData.wynagrodzenieWaluta
+      ) {
         this.workers.push(newWorker);
         this.setDepartmentsFilter();
         this.clearWorkersForm();
       } else {
-        alert("uzupełnij imię lub nazwisko");
+        alert("wypełnij wszystkie pola formularza aby dodać pracownika");
       }
     },
 
@@ -134,40 +131,11 @@ export default {
       this.allowedDepartments = [
         ...new Set(workers.map(worker => worker.dzial))
       ];
-    },
-
-    filterArray() {
-      let a = this.valueA;
-      let b = this.valueB;
-      let workers = this.workers;
-
-      workers.filter(worker => {
-        if (worker.wynagrodzenieKwota > a && worker.wynagrodzenieKwota < b) {
-          console.log(worker);
-          return (this.workers = this.workers.slice());
-        }
-        if (worker.wynagrodzenieKwota > a && worker.wynagrodzenieKwota == "") {
-          console.log("war. 2");
-        }
-        if (worker.wynagrodzenieKwota == "" && worker.wynagrodzenieKwota < b) {
-          console.log("war. 3");
-        }
-      });
     }
   },
   computed: {
-    filteredWorkers: function() {
-      return this.workers.filter(worker => {
-        return (
-          worker.imie.toLowerCase().match(this.search.toLowerCase()) ||
-          worker.nazwisko.toLowerCase().match(this.search.toLowerCase())
-        );
-      });
-    },
-
     filteredWorkersIds: function() {
       var filteredIds = [];
-      console.log(filteredIds);
 
       for (const [index, element] of this.workers.entries()) {
         if (
@@ -179,14 +147,14 @@ export default {
 
         if (
           this.filters.salaryFrom != "" &&
-          this.filters.salaryFrom > element.wynagrodzenieKwota
+          this.filters.salaryFrom > parseInt(element.wynagrodzenieKwota)
         ) {
           continue;
         }
 
         if (
           this.filters.salaryTo != "" &&
-          this.filters.salaryTo < element.wynagrodzenieKwota
+          this.filters.salaryTo < parseInt(element.wynagrodzenieKwota)
         ) {
           continue;
         }
@@ -225,29 +193,100 @@ export default {
 
 
 <style scoped>
-input,
-select {
-  background-color: antiquewhite;
-  color: rgb(19, 18, 18);
+* {
+  font-family: "Public Sans", sans-serif;
 }
 
+.add-wrapper,
+.search-wrapper {
+  text-align: left;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+.add-wrapper {
+  margin-bottom: 50px;
+}
+.table-wrapper {
+  position: relative;
+  display: inline-block;
+  align-content: left;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+input,
+select {
+  box-sizing: border-box;
+  background-color: #4bb2cc;
+  color: aliceblue;
+  font-size: 15px;
+  margin-right: 30px;
+  margin-top: 15px;
+  width: 180px;
+  height: 30px;
+  padding: 2px;
+  border: 2px solid #4b9db3;
+  text-decoration: none;
+}
+
+.add-wrapper input {
+  display: block;
+}
+.btn {
+  background-color: #1c5766;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+::placeholder {
+  color: aliceblue;
+  opacity: 1;
+}
+
+table {
+  background-color: rgb(248, 227, 156);
+  border-collapse: collapse;
+  margin: 50px auto 20px;
+}
+tr:hover {
+  background-color: #429cb3;
+}
 th,
 td {
-  border: 1px solid rgb(18, 18, 19);
+  overflow: hidden;
+  border: 1px solid black;
+  width: 15%;
+  max-width: 150px;
+  margin: 0;
+  padding: 3px;
+  font-size: 15px;
+  word-wrap: break-word;
 }
-h1,
+h1 {
+  color: rgb(255, 242, 172);
+}
 th {
-  color: rgb(34, 33, 33);
-  font-size: 20px;
+  background-color: #b37842;
+  color: rgb(14, 13, 12);
+
+  text-transform: uppercase;
 }
 td {
-  color: rgb(31, 30, 29);
-  font-size: 15px;
+  color: rgba(31, 30, 29, 0.897);
+}
+
+h1 {
+  text-align: left;
+  margin-left: 5%;
+  margin-bottom: 30px;
 }
 p {
   display: inline-block;
-  margin-right: 100px;
-  color: rgb(48, 47, 46);
+  color: aliceblue;
   font-size: 20px;
+}
+div.sum {
+  padding-right: 10px;
+  position: absolute;
+  bottom: -40px;
+  right: 0;
 }
 </style>
