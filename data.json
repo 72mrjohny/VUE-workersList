@@ -1,37 +1,37 @@
 [
     {
         "imie": "Jan",
-        "nazwisko": "Kowalski",
-        "dzial": "IT",
+        "nazwisko": "Nowik",
+        "dzial": "Pracownik fizyczny",
         "wynagrodzenieKwota": "3000",
         "wynagrodzenieWaluta": "PLN"
     },
     {
         "imie": "Anna",
-        "nazwisko": "Bąk",
-        "dzial": "Administracja",
+        "nazwisko": "Potocka",
+        "dzial": "HR",
         "wynagrodzenieKwota": "2400.50",
         "wynagrodzenieWaluta": "PLN"
     },
     {
         "imie": "Paweł",
-        "nazwisko": "Zabłocki",
+        "nazwisko": "Niewęgłowski",
         "dzial": "IT",
-        "wynagrodzenieKwota": "3300",
-        "wynagrodzenieWaluta": "PLN"
+        "wynagrodzenieKwota": "2400",
+        "wynagrodzenieWaluta": "EUR"
     },
     {
         "imie": "Tomasz",
-        "nazwisko": "Osiecki",
-        "dzial": "Administracja",
+        "nazwisko": "Nowacki",
+        "dzial": "Pracownik fizyczny",
         "wynagrodzenieKwota": "2100",
         "wynagrodzenieWaluta": "PLN"
     },
     {
         "imie": "Iwona",
-        "nazwisko": "Leihs-Gutowska",
-        "dzial": "Handlowiec",
-        "wynagrodzenieKwota": "3100",
+        "nazwisko": "Kościuszko",
+        "dzial": "HR",
+        "wynagrodzenieKwota": "5100",
         "wynagrodzenieWaluta": "PLN"
     }
 ]

@@ -11,8 +11,8 @@
           :value="department"
         >{{department}}</option>
       </select>
-      <input type="number" v-model="filters.salaryFrom" placeholder="Płaca (od)" />
-      <input type="number" v-model="filters.salaryTo" placeholder="Płaca (do)" />
+      <input type="number" v-model="filters.salaryFrom" placeholder="Wynagrodzenie (od)" />
+      <input type="number" v-model="filters.salaryTo" placeholder="Wynagrodzenie (do)" />
     </div>
     <div class="table-wrapper">
       <table>
@@ -38,7 +38,7 @@
         </tbody>
       </table>
       <div class="sum">
-        <p>Wynagrodzenie(suma):{{this.totalSum}}</p>
+        <p>Wynagrodzenie (suma): {{this.totalSum}}</p>
       </div>
     </div>
 
@@ -48,6 +48,7 @@
       <input type="text" placeholder="Dział" v-model="formData.dzial" />
       <input type="number" placeholder="Wynagrodzenie" v-model="formData.wynagrodzenieKwota" />
       <select name="Waluta" v-model="formData.wynagrodzenieWaluta">
+        <option disabled selected>Wybierz walutę</option>
         <option value="PLN">PLN</option>
         <option value="EUR">EUR</option>
         <option value="USD">USD</option>
@@ -61,14 +62,13 @@
 import workers from "../../data.json";
 
 export default {
-  name: "HelloWorld",
+  name: "workersList",
   created() {
     this.workers = workers;
     this.setDepartmentsFilter();
   },
   data() {
     return {
-      //filteredWorkersIds: [1, 3],
       allowedDepartments: [],
 
       filters: {
@@ -137,34 +137,32 @@ export default {
     filteredWorkersIds: function() {
       var filteredIds = [];
 
-      for (const [index, element] of this.workers.entries()) {
+      for (const [index, worker] of this.workers.entries()) {
         if (
           this.filters.department != "" &&
-          this.filters.department != element.dzial
+          this.filters.department != worker.dzial
         ) {
           continue;
         }
 
         if (
           this.filters.salaryFrom != "" &&
-          this.filters.salaryFrom > parseInt(element.wynagrodzenieKwota)
+          this.filters.salaryFrom > parseInt(worker.wynagrodzenieKwota)
         ) {
           continue;
         }
 
         if (
           this.filters.salaryTo != "" &&
-          this.filters.salaryTo < parseInt(element.wynagrodzenieKwota)
+          this.filters.salaryTo < parseInt(worker.wynagrodzenieKwota)
         ) {
           continue;
         }
 
         if (
           this.filters.search != "" &&
-          !element.imie
-            .toLowerCase()
-            .match(this.filters.search.toLowerCase()) &&
-          !element.nazwisko
+          !worker.imie.toLowerCase().match(this.filters.search.toLowerCase()) &&
+          !worker.nazwisko
             .toLowerCase()
             .match(this.filters.search.toLowerCase())
         ) {
@@ -195,6 +193,7 @@ export default {
 <style scoped>
 * {
   font-family: "Public Sans", sans-serif;
+  box-sizing: border-box;
 }
 
 .add-wrapper,
@@ -218,23 +217,33 @@ select {
   box-sizing: border-box;
   background-color: #4bb2cc;
   color: aliceblue;
+  text-shadow: 1px 1px 4px #000000;
   font-size: 15px;
   margin-right: 30px;
   margin-top: 15px;
-  width: 180px;
+  width: 200px;
   height: 30px;
   padding: 2px;
   border: 2px solid #4b9db3;
   text-decoration: none;
+  box-shadow: 0 0 5px rgb(0, 0, 0);
 }
 
 .add-wrapper input {
   display: block;
 }
 .btn {
-  background-color: #1c5766;
+  background-color: #4bb2cc;
+
+  text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.932);
+  color: #ffffff;
   text-transform: uppercase;
   cursor: pointer;
+  transition: 0.3s;
+}
+.btn:hover {
+  color: #000000;
+  box-shadow: 0 0 4px rgb(255, 255, 255);
 }
 ::placeholder {
   color: aliceblue;
@@ -242,35 +251,49 @@ select {
 }
 
 table {
-  background-color: rgb(248, 227, 156);
   border-collapse: collapse;
   margin: 50px auto 20px;
+  text-align: center;
 }
-tr:hover {
-  background-color: #429cb3;
-}
-th,
-td {
+
+tr {
+  text-align: center;
   overflow: hidden;
   border: 1px solid black;
-  width: 15%;
-  max-width: 150px;
+  width: 100%;
   margin: 0;
-  padding: 3px;
+
+  color: rgb(14, 13, 12);
   font-size: 15px;
   word-wrap: break-word;
 }
 h1 {
   color: rgb(255, 242, 172);
+  text-shadow: 1px 1px #000000;
 }
 th {
   background-color: #b37842;
-  color: rgb(14, 13, 12);
-
+  text-align: center;
   text-transform: uppercase;
+  font-weight: normal;
+  border: 1px solid black;
+  min-width: 180px;
+  padding: 3px;
 }
 td {
-  color: rgba(31, 30, 29, 0.897);
+  border: 1px solid black;
+  text-align: center;
+  min-width: 180px;
+  padding: 3px;
+}
+tr:nth-of-type(odd) {
+  background-color: rgb(224, 214, 155);
+}
+tr:nth-of-type(even) {
+  background-color: rgb(248, 227, 156);
+}
+tr:hover {
+  background-color: #429cb3;
 }
 
 h1 {
@@ -282,11 +305,43 @@ p {
   display: inline-block;
   color: aliceblue;
   font-size: 20px;
+  text-shadow: 1px 1px #000000;
 }
 div.sum {
   padding-right: 10px;
   position: absolute;
   bottom: -40px;
   right: 0;
+}
+/* SEKCJA FLEX */
+
+@media screen and (max-width: 800px) {
+  .table-wrapper {
+    margin-bottom: 30px;
+  }
+  th,
+  tr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    text-align: center;
+    margin-bottom: 2px;
+  }
+  td,
+  th {
+    width: 100%;
+  }
+  th:nth-of-type(odd) {
+    background-color: #b37942c4;
+  }
+  td:nth-of-type(odd) {
+    background-color: rgb(224, 214, 155);
+  }
+  td:nth-of-type(even) {
+    background-color: rgb(248, 227, 156);
+  }
+  td:hover {
+    background-color: #429cb3;
+  }
 }
 </style>
